@@ -74,7 +74,7 @@ function compileHtml() {
 }
 
 // 감지상태 이고, 레이아웃 파일의 변경이 아닌 경우
-if ( isWatch && !/^src\/layout/.test( files[0] ) ) {
+if ( isWatch && !/^src[\/\\]layout/.test( files[0] ) ) {
   console.log(`[html 감지]`, files, event)
 
   if ( event == 'unlink' ) {
