@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+html {
+}
+
+body {
+  //word-break: break-word;
+  color: $기본글꼴색상;
+  font-family: $기본글꼴;
+  font-size: $기본글꼴크기;
+  font-weight: $폰트regular;
+  background-color: $기본배경색상;
+}
+
+a {
+  color: $기본글꼴색상;
+  text-decoration: none;
+
+  &:hover {
+    color: #0e0e0e;
+  }
+
+}
+
+.fr {
+  float: right;
+}
+
+.txt_l {
+  text-align: left !important;
+}
+
+.txt_r {
+  text-align: right !important;
+}
+
+.txt_c {
+  text-align: center !important;
+}
+
+hr.divide {
+  height: 2px;
+  background: #60A0DF;
+  margin: 30px 0;
+  border: 0;
+}

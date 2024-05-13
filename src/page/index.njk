@@ -1,0 +1,20 @@
+{% extends "layout/default.njk" %}
+
+{% set 제작자 = "이희원" %}
+{% set 이메일 = "userEmail@domain.com" %}
+{% set 페이지아이디 = "main" %}
+{% set 페이지타이틀 = "서브페이지" %}
+
+{% block pageCss %}
+<link rel="stylesheet" type="text/css" href="/resource/css/page/{{ 페이지아이디 }}.css" />
+{% endblock %}
+
+{% block body %}
+
+INDEX
+
+{% endblock %}
+
+{% block pageScript %}
+<script type="text/javascript" src="/resource/js/page/{{ 페이지아이디 }}.js"></script>
+{% endblock %}

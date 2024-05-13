@@ -1,0 +1,32 @@
+{% import "layout/headerVar.njk" as headerMeta %}
+
+<!-- @퍼블리셔: {{ 제작자 }} ({{ 이메일 }}){% if 사용자환경 %} {{ 사용자환경 }}{% endif %} -->
+<!-- @버전: v{{ 버전 }} ({{ 현재시간 }}) -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+    <title>페이지 제목{% if 페이지타이틀 %} - {{ 페이지타이틀 }}{% endif %}</title>
+
+    {{ headerVar.meta() }}
+    {{ headerVar.resource() }}
+
+</head>
+<body>
+<div class="wrapper" id="__APP__">
+
+    <main id="body" role="main">
+
+        {% block body %}
+        body block
+        {% endblock %}
+
+    </main>
+
+</div>
+
+{% block pageScript %}
+{% endblock %}
+
+</body>
+</html>

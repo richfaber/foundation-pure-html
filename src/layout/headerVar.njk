@@ -1,0 +1,28 @@
+{% macro meta() %}
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    {#    <meta property="og:title" content="" />#}
+    {#    <meta property="og:type" content="" />#}
+    {#    <meta property="og:url" content="" />#}
+    {#    <meta property="og:image" content="" />#}
+    {#    <meta property="og:image:alt" content="" />#}
+
+    {#    <link rel="icon" href="/favicon.ico" sizes="any" />#}
+    {#    <link rel="icon" href="/icon.svg" type="image/svg+xml" />#}
+    {#    <link rel="apple-touch-icon" href="icon.png" />#}
+
+    {#    <link rel="manifest" href="site.webmanifest" />#}
+    {#    <meta name="theme-color" content="#fafafa" />    #}
+
+{% endmacro %}
+
+{% macro resource() %}
+
+    <link rel="stylesheet" type="text/css" href="/resource/css/app.css?v={{ 버전 }}" />
+    <script type="text/javascript" src="/resource/js/ui-polyfill.js?v={{ 버전 }}"></script>
+    <script type="text/javascript" src="/resource/js/ui-vendor.js?v={{ 버전 }}"></script>
+
+{% endmacro %}

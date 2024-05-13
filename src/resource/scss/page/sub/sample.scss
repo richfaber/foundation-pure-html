@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+@import "@/import";
+
+div {
+  font-family: $기본글꼴;
+}
+
+.animation { transition-timing-function: cubic-bezier('easeOutSine'); }
