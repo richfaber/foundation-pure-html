@@ -2,6 +2,8 @@ import sass from 'sass'
 
 import fs from 'fs'
 import globby from 'globby'
+import postcss from 'postcss'
+import autoprefixer from 'autoprefixer'
 
 import { configs, plugins } from '../configs'
 
@@ -16,19 +18,36 @@ function compatiblePath( str ) {
   return str.replace( /\\/g, '/' )
 }
 
+function workPostCss( css, pathOut, fileName, prevMap ) {
+  return postcss( [ autoprefixer ] )
+    .process( css, {
+      from: undefined, // SourceMap을 생성할 때 입력 파일 경로가 필요하지 않습니다.
+      map: prevMap ? { prev: prevMap, inline: false, annotation: false } : { inline: false, annotation: false }
+    } )
+    .then( result => {
+
+      writeFile( pathOut, fileName, result.css );
+
+      if ( result.map ) {
+        // SourceMap을 별도의 파일로 저장합니다.
+        writeFile( pathOut, fileName + '.map', result.map.toString() );
+      }
+
+    } );
+}
 
 function writeFile( pathOut, fileName, fileData = true ) {
-  // Create the directory path
+
   fs.mkdir( pathOut, { recursive: true }, function ( err ) {
-    // If there's an error, throw it
+
     if ( err ) throw err;
 
-    // Write the file to the path
     fs.writeFile( `${ pathOut }${ fileName }`, fileData, function ( err ) {
       if ( err ) throw err;
 
       const data = fs.readFileSync( `${ pathOut }${ fileName }` );
       const fd = fs.openSync( `${ pathOut }${ fileName }`, 'w+' );
+
       fs.writeSync( fd, data, 0, data.length, 0 );
       fs.close( fd, function ( err ) {
         if ( err ) throw err;
@@ -42,13 +61,13 @@ function parseSass( srcFiles ) {
 
   srcFiles.forEach( srcFile => {
 
-    const outFile = compatiblePath(srcFile)
+    const outFile = compatiblePath( srcFile )
       .replace( /^src/g, configs.dest )
       .replace( /\/scss\//g, '/css/' )
       .replace( /.scss$/g, '.css' )
 
-    const outFileName = outFile.match(/[^/]+$/)[0]
-    const outFilePath = outFile.match(/^(.*\/)[^/]+$/)[1]
+    const outFileName = outFile.match( /[^/]+$/ )[0]
+    const outFilePath = outFile.match( /^(.*\/)[^/]+$/ )[1]
 
     sass.render( {
       file: srcFile,
@@ -59,11 +78,8 @@ function parseSass( srcFiles ) {
 
       if ( err ) throw err;
 
-      writeFile( outFilePath, outFileName, result.css );
+      workPostCss( result.css.toString(), outFilePath, outFileName );
 
-      if ( configs.sourceMap ) {
-        writeFile( outFilePath, outFileName + '.map', result.map, false );
-      }
     } )
 
   } )
@@ -78,17 +94,17 @@ if ( isWatch ) {
   }
 
   // 파일명이 '_' 인 경우
-  if ( /_[^\/]*?\.*$/.test(files[0]) ) {
+  if ( /_[^\/]*?\.*$/.test( files[0] ) ) {
     files = configs.css.chunk
-    console.log(`>> '_' 파일은 import 대상으로, 컴파일 제외`)
+    console.log( `>> '_' 파일은 import 대상으로, 컴파일 제외` )
   }
 
-  parseSass( files.map(file => `${ configs.root }${file}`) )
+  parseSass( files.map( file => `${ configs.root }${ file }` ) )
 
 } else {
 
   globby( `${ configs.css.src }/**/!(_*).scss`, {} ).then( files => {
     parseSass( files )
-  })
+  } )
 
 }
