@@ -91,7 +91,7 @@ if ( isWatch && isIgnore ) {
 
 } else {
 
-  globby( [ `${ configs.root }/**/*.njk`, `!${ configs.root }/layout/**` ] ).then( filePaths => {
+  globby( [ `${ configs.root }/**/*.njk`, `!${ configs.root }/layout/**`, `!${ configs.root }/import/**` ] ).then( filePaths => {
     files = filePaths.map( filePath => filePath.replace( 'src/', '' ) )
   } ).then( compileHtml )
 
