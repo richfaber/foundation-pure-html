@@ -7,12 +7,17 @@ import { html as beautify } from 'js-beautify';
 import { configs } from '../configs'
 
 let argv = process.argv.slice( 2 )
-let isWatch = !!argv.length
 
 // watch 대상파일
 let files = [ argv[0] ]
 let event = [ argv[1] ] // add, unlink
-let prefix = `${ configs.root }/page/`
+
+const isWatch = !!argv.length
+
+// 컴파일 제외 대상파일
+const isIgnore = isWatch && !/^src[\/\\]layout/.test( files[0] ) || /^src[\/\\]import/.test( files[0] )
+const isSubmodule = (process.env.GIT_ENV === 'submodule')
+
 
 function compatiblePath( str ) {
   return str.replace( /\\/g, '/' )
@@ -73,9 +78,9 @@ function compileHtml() {
   } );
 }
 
-// 감지상태 이고, 레이아웃 파일의 변경이 아닌 경우
-if ( isWatch && !/^src[\/\\]layout/.test( files[0] ) ) {
-  console.log(`[html 감지]`, files, event)
+// 감지상태 이고, 컴파일 대상이 아닌 경우
+if ( isWatch && isIgnore ) {
+  console.log( `[html 감지]`, files, event )
 
   if ( event == 'unlink' ) {
     process.exit( 1 )
@@ -86,7 +91,7 @@ if ( isWatch && !/^src[\/\\]layout/.test( files[0] ) ) {
 
 } else {
 
-  globby( [`${ configs.root }/**/*.njk`, `!${ configs.root }/layout/**`] ).then( filePaths => {
+  globby( [ `${ configs.root }/**/*.njk`, `!${ configs.root }/layout/**` ] ).then( filePaths => {
     files = filePaths.map( filePath => filePath.replace( 'src/', '' ) )
   } ).then( compileHtml )
 
