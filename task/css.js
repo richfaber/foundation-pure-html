@@ -4,6 +4,7 @@ import fs from 'fs'
 import globby from 'globby'
 import postcss from 'postcss'
 import autoprefixer from 'autoprefixer'
+import postcssReporter from "postcss-reporter";
 
 import { configs, plugins } from '../configs'
 
@@ -19,7 +20,10 @@ function compatiblePath( str ) {
 }
 
 function workPostCss( css, pathOut, fileName, prevMap ) {
-  return postcss( [ autoprefixer ] )
+  return postcss( [
+    autoprefixer,
+    postcssReporter({ clearReportedMessages: true })
+  ] )
     .process( css, {
       from: pathOut,
       map: prevMap ? { prev: prevMap, inline: false, annotation: false } : { inline: false, annotation: false }
@@ -76,7 +80,7 @@ function parseSass( srcFiles ) {
       ...configs.css
     }, function ( err, result ) {
 
-      if ( err ) throw err
+      if ( err ) throw err.message
 
       workPostCss( result.css.toString(), outFilePath, outFileName, (result.map) && result.map.toString() )
 
