@@ -14,7 +14,7 @@
         "css": "babel-node task/css.js",
         "img": "babel-node task/img.js",
         "html": "babel-node task/html.js",
-        "html-lint": "html-validate dist/**/*.html",
+        "html-lint": "html-validate \"dist/**/*.html\"",
         "build:dirty": "npm-run-all -p js-chunk js-page css img html",
         "build": "cross-env NODE_ENV=production npm-run-all -s clean build:dirty html-lint",
         "watch:css": "chokidar ./src/resource/scss/**/*.scss -c \"npm run css -- {path} {event}\"",
