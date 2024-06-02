@@ -1,29 +1,28 @@
-import imagemin from 'imagemin';
-import globby from 'globby';
-import path from 'path';
+const imagemin = require('imagemin');
+const globby = require('globby');
+const path = require('path');
 
-import { configs, plugins } from '../configs'
+const { configs, plugins } = require('../configs');
 
-globby( configs.img.src + configs.img.type, { nodir: true } ).then( filePaths => {
-  filePaths.forEach( filePath => {
-    const fileDir = path.dirname( filePath );
-    doCompress( filePath, fileDir.replace( configs.img.src, configs.img.dest ) );
-  } )
-} );
+globby(configs.img.src + configs.img.type, { nodir: true })
+  .then(filePaths => {
+    filePaths.forEach(filePath => {
+      const fileDir = path.dirname(filePath);
+      doCompress(filePath, fileDir.replace(configs.img.src, configs.img.dest));
+    });
+  });
 
-function doCompress( srcFile, outDir ) {
-
-  imagemin( [ srcFile ], {
+function doCompress(srcFile, outDir) {
+  imagemin([srcFile], {
     destination: outDir,
     plugins: plugins.img
-  } ).then( ( files ) => {
-
-    console.log( `[이미지압축] ${ srcFile } -> ${ files[0].destinationPath }` )
-
-  } ).catch( err => {
-
-    console.log( `[이미지압축 error]: ${ err }` )
-
-  } )
-
+  })
+    .then(files => {
+      console.log(`[이미지압축] ${srcFile} -> ${files[0].destinationPath}`);
+    })
+    .catch(err => {
+      console.log(`[이미지압축 error]: ${err}`);
+    });
 }
+
+module.exports = doCompress;

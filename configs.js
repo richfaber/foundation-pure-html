@@ -1,45 +1,45 @@
-import path from 'path';
+const path = require('path');
 
-import alias from '@rollup/plugin-alias'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import eslint from '@rollup/plugin-eslint'
-import babel from 'rollup-plugin-babel'
-import json from '@rollup/plugin-json'
-import { terser } from 'rollup-plugin-terser'
+const alias = require('@rollup/plugin-alias');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const eslint = require('@rollup/plugin-eslint');
+const babel = require('rollup-plugin-babel');
+const json = require('@rollup/plugin-json');
+const { terser } = require('rollup-plugin-terser');
 
-import imageminSharp from 'imagemin-sharp' // imagemin-svgo 병목
-import imageminMozjpeg from 'imagemin-mozjpeg'
-import imageminPngcrush from 'imagemin-pngcrush'
-import imageminPngquant from 'imagemin-pngquant'
-import imageminZopfli from 'imagemin-zopfli'
-import imageminSvgo from 'imagemin-svgo'
+const imageminSharp = require('imagemin-sharp'); // imagemin-svgo 병목
+const imageminMozjpeg = require('imagemin-mozjpeg');
+const imageminPngcrush = require('imagemin-pngcrush');
+const imageminPngquant = require('imagemin-pngquant');
+const imageminZopfli = require('imagemin-zopfli');
+const imageminSvgo = require('imagemin-svgo');
 
-import aliasImporter from 'node-sass-alias-importer'
+const aliasImporter = require('node-sass-alias-importer');
 
-import pkg from './package.json'
+const pkg = require('./package.json');
 
-const exclude = [ 'node_modules/**' ]
+const exclude = ['node_modules/**'];
 
 const configs = {
   name: pkg.name,
   root: 'src',
   dest: 'dist',
   // formats: ['iife', 'es', 'amd', 'cjs'],
-  formats: [ 'iife' ],
+  formats: ['iife'],
   default: 'iife',
   minify: (process.env.NODE_ENV === 'production'),
   sourceMap: (process.env.NODE_ENV !== 'production'),
   port: {
     dev: 10222
   }
-}
+};
 
 configs.js = {
-  chunk: [ 'ui-vendor.js', 'ui-polyfill.js' ],
-  src: `${ configs.root }/resource/js`,
-  dest: `${ configs.dest }/resource/js`
-}
+  chunk: ['ui-vendor.js', 'ui-polyfill.js'],
+  src: `${configs.root}/resource/js`,
+  dest: `${configs.dest}/resource/js`
+};
 
 configs.html = {
   nunjucks: {
@@ -59,55 +59,55 @@ configs.html = {
     indent_empty_lines: false, // 빈라인을 유지할지 여부
   },
   relativePath: true // 상대경로 변환 여부
-}
+};
 
 configs.css = {
-  chunk: [ '/resource/scss/app.scss' ],
-  src: `${ configs.root }/resource/scss`,
-  dest: `${ configs.dest }/resource/scss`,
+  chunk: ['/resource/scss/app.scss'],
+  src: `${configs.root}/resource/scss`,
+  dest: `${configs.dest}/resource/scss`,
   sourceMap: configs.sourceMap,
   sourceMapContents: configs.sourceMap,
   indentType: 'space',
   indentWidth: 2,
   outputStyle: configs.minify ? 'compressed' : 'expanded'
-}
+};
 
 configs.img = {
   type: '/**/*.{jpg,jpeg,png,gif,svg}',
   src: `${configs.root}/resource/image`,
   dest: `${configs.dest}/resource/image`
-}
+};
 
 const plugins = {
   js: [
-    alias( {
+    alias({
       entries: [
-        { find: '@', replacement: path.resolve( __dirname, configs.root ) }
+        { find: '@', replacement: path.resolve(__dirname, configs.root) }
       ]
-    } ),
-    nodeResolve( {
+    }),
+    nodeResolve({
       // use 'jsnext:main' if possible
       // see https://github.com/rollup/rollup/wiki/jsnext:main
       jsnext: true,
       browser: true
-    } ),
+    }),
     commonjs(),
-    eslint( {
+    eslint({
       exclude
-    } ),
-    babel( {
+    }),
+    babel({
       exclude
-    } ),
+    }),
     json()
   ],
 
   img: [
-    imageminSvgo( {
-      plugins: [ {
+    imageminSvgo({
+      plugins: [{
         name: 'removeViewBox',
         active: true
-      } ]
-    } ),
+      }]
+    }),
     // imageminSharp(),
     // imageminWebp({ quality: 80 }),
     imageminMozjpeg(),
@@ -118,24 +118,21 @@ const plugins = {
 
   scss: {
     importer: [
-      aliasImporter( {
+      aliasImporter({
         '@': './src/resource/scss',
         'common': './src/resource/scss/common',
         'define': './src/resource/scss/define',
         'layout': './src/resource/scss/layout',
         'vendor': './src/resource/scss/vendor'
-      } )
+      })
     ],
   }
+};
 
-}
-
-if ( process.env.NODE_ENV === 'production' ) {
-
-  if ( configs.minify ) {
-    plugins.js.push( terser() )
+if (process.env.NODE_ENV === 'production') {
+  if (configs.minify) {
+    plugins.js.push(terser());
   }
-
 }
 
-export { configs, plugins, exclude }
+module.exports = { configs, plugins, exclude };

@@ -11,9 +11,9 @@
     "clean": "recursive-delete dist",
     "js-chunk": "rollup --config task/rollup.chunk.js",
     "js-page": "rollup --config task/rollup.page.js",
-    "css": "babel-node task/css.js",
-    "img": "babel-node task/img.js",
-    "html": "babel-node task/html.js",
+    "css": "node task/css.js",
+    "img": "node task/img.js",
+    "html": "node task/html.js",
     "html-lint": "html-validate \"./dist/**/*.html\"",
     "build:dirty": "npm-run-all -p js-chunk js-page css img html",
     "build": "cross-env NODE_ENV=production npm-run-all -s clean build:dirty pagelist html-lint",
@@ -24,9 +24,9 @@
     "watch:html": "chokidar **/*.njk -c \"npm run html -- {path} {event}\"",
     "watch:html-lint": "chokidar ./dist/**/*.html -c \"html-validate {path}\"",
     "watch": "npm-run-all -p watch:css watch:js-chunk watch:js-page watch:img watch:html watch:html-lint",
-    "server:start": "babel-node task/server",
+    "server:start": "node task/server",
     "server": "npm-run-all -p clean build:dirty server:start watch",
-    "pagelist": "babel-node task/pagelist"
+    "pagelist": "node task/pagelist"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.5",
