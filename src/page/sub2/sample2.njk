@@ -1,0 +1,24 @@
+{% extends "layout/default.njk" %}
+
+{% set 제작자 = "이희원" %}
+{% set 이메일 = "userEmail@domain.com" %}
+{% set 페이지아이디 = "BB0000" %}
+{% set 페이지타이틀 = "서브페이지" %}
+
+{% block pageCss %}
+<link rel="stylesheet" type="text/css" href="/resource/css/page/sub2/{{ 페이지아이디 }}.css" />
+{% endblock %}
+
+{% block body %}
+
+<p><> 특수문자 변환</p>
+<p><button id="click-me">클릭</button></p>
+
+<img src="/resource/image/svg/icecream.svg" />
+<img src="/resource/image/hello.jpeg" />
+
+{% endblock %}
+
+{% block pageScript %}
+<script type="text/javascript" src="/resource/js/page/sub2/{{ 페이지아이디 }}.js"></script>
+{% endblock %}

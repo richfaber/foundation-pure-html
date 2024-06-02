@@ -64,6 +64,7 @@
     "pnpm": "^9.1.4",
     "postcss": "^8.4.38",
     "postcss-reporter": "^7.1.0",
+    "puppeteer": "^22.10.0",
     "recursive-copy": "^2.0.14",
     "recursive-fs": "^2.1.0",
     "rollup": "^2.6.1",
