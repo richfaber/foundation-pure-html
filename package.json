@@ -17,7 +17,7 @@
     "html-lint": "html-validate \"./dist/**/*.html\"",
     "build:dirty": "npm-run-all -p js-chunk js-page css img html",
     "build": "cross-env NODE_ENV=production npm-run-all -s clean build:dirty html-lint",
-    "watch:css": "chokidar ./src/resource/scss/**/*.scss -c \"npm run css -- {path} {event}\"",
+    "watch:css": "chokidar ./src/resource/scss/** -c \"npm run css -- {path} {event}\"",
     "watch:js-chunk": "chokidar ./src/resource/js/*.* -c \"npm run js-chunk\"",
     "watch:js-page": "chokidar ./src/resource/js/page/**/* -c \"npm run js-page\"",
     "watch:img": "chokidar ./src/resource/image/** -c \"npm run img -- {path} {event}\"",
