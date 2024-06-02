@@ -11,6 +11,10 @@
 
 - [Install Node.js.](http://nodejs.org/)
 
+## 에디터 헬퍼
+
+- vscode njk 지원 - https://marketplace.visualstudio.com/items?itemName=douglaszaltron.nunjucks-vscode-extensionpack
+
 ## 설치
 
 ```terminal
