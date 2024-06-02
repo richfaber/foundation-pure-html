@@ -1,289 +1,112 @@
-# html + nunjucks + scss + es6 조합 빌드 환경
+# html + nunjucks + scss + es6 조합 페이지 빌드 환경
 
-- 페이지에서 서브모듈 컴포넌트 수정한 경우
-- [build-tool-boilerplate](https://github.com/cferdinandi/build-tool-boilerplate) 참조하여, 재구성함
+## 구성
 
-**사전 설치**
+- nunjucks 로 html 구조화 하고, build 후에 html 을 생성함.
+- rollup 으로 js 를 생성함.
+- sass, postcss 로 css 를 생성함.
+- imagemin 으로 image 를 생성함.
+
+## 사전 설치
 
 - [Install Node.js.](http://nodejs.org/)
 
-**빌드 하기**
+## 에디터 헬퍼
 
-1. Run `npm install`.
-2. Run `npm run build`.
+- vscode njk 지원 - https://marketplace.visualstudio.com/items?itemName=douglaszaltron.nunjucks-vscode-extensionpack
 
-### 도구 목록
+## 설치
 
-```bash
-# Main Tasks
-npm run js     # compile and minify
-npm run css    # compile and minify Sass into CSS
-npm run svg    # optimize SVGs with SVGO
-npm run img    # optimize image files
-npm run copy   # copy files from the src/copy directory as-is into /dist
-npm run clean  # delete the /dist directory
-npm run build  # run all tasks
-npm run watch  # watch for changes and rebuild
-npm run server # run a localhost server that reloads when files change
-
-# Modular Tasks
-npm run watch-js     # watch for changes to the /js directory
-npm run watch-css    # watch for changes to the /css directory
-npm run watch-svg    # watch for changes to the /svg directory
-npm run watch-img    # watch for changes to the /img directory
-npm run watch-copy   # watch for changes to the /copy directory
-npm run build-dirty  # run a new build without deleting the /dist directory
-npm run server-start # start a server without watching for changes
+```terminal
+$> npm install
 ```
 
+## 명령어
 
-### JavaScript
-
-The boilerplate uses [rollup.js](https://rollupjs.org) with the [terser](https://terser.org/) plugin to parse, compile, and minify JavaScript files.
-
-```json
-{
-    "devDependencies": {
-        "rollup": "^2.6.1",
-        "rollup-plugin-terser": "^7.0.2"
-    }
-}
+```terminal
+$> npm run server // 로컬서버 구동
+$> npm run build // 자원 빌드
 ```
 
-In the `rollup.config.js` file, there's a `configs` object that you can use to control what rollup.js does.
+## 컴포넌트와 페이지를 분리해서 하는 경우 
 
-```js
-// Configs
-const configs = {
-    name: 'MyProject',                // Global namespace to use for IIFEs [optional]
-    files: ['main.js', 'detects.js'], // The files to process
-    formats: ['iife', 'es'],          // The formats to output - will be added as a suffix to the filename (ex. main.es.js)
-    default: 'iife',                  // Files with this format will not have a format suffix [optional]
-    pathIn: 'src/js',                 // The source directory for your JS files
-    pathOut: 'dist/js',               // The directory to compile JS files into
-    minify: true,                     // If true, a minified version will also be created with the .min suffix
-    sourceMap: false                  // If true, sourcemaps are created for each processed file †
-};
-```
+- [컴포넌트](https://github.com/richfaber/foundation-pure-html-component) 
+- [페이지](https://github.com/richfaber/foundation-pure-html-page) 
 
-To concatentate multiple files into one, use the ES modules `import` feature.
+## 스크립트
 
-### Nunjunks
+### clean
 
+dist 폴더 내의 모든 파일과 폴더를 삭제합니다.
 
-_**Note for FireFox users:** ensure that ['Use Source Maps'](https://github.com/cferdinandi/build-tool-boilerplate/issues/7#issuecomment-811432626), and ['Show original sources'](https://github.com/cferdinandi/build-tool-boilerplate/issues/7#issuecomment-811855711) options are enabled in Developer Tools._
+### js-chunk
 
-### Sass => CSS
+rollup을 사용해 자바스크립트 청크 파일을 번들링합니다.
 
-The boilerplate uses the Node implementation of [dart-sass](https://sass-lang.com/dart-sass) to parse `.scss` files into CSS.
+### js-page
 
-```json
-{
-    "devDependencies": {
-        "sass": "^1.26.5"
-    }
-}
-```
+rollup을 사용해 페이지별 자바스크립트 파일을 번들링합니다.
 
-In the `sass.js` file, there's a `configs` object that you can use to control what `dart-sass` does.
+### css
 
-```js
-// Configs
-const configs = {
-    name: 'MyProject',    // The name to use in the file banner
-    files: ['main.scss'], // The files to process
-    pathIn: 'src/scss',   // The source directory for your Sass files
-    pathOut: 'dist/css',  // The directory to compile CSS files into
-    indentType: 'tab',    // The type of indenting to use ['tab'|'spaces']
-    indentWidth: 1,       // How many tabs or spaces to indent
-    minify: true,         // If true, a minified version will also be created with the .min suffix
-    sourceMap: false,     // If true, sourcemaps are created for each processed file †
-};
-```
+babel-node를 사용해 CSS 파일을 처리합니다.
 
-A banner is automatically generated from your `package.json` data.
+### img
 
-It includes the project name and version, a copyright notice with the current year and the package author name, the license type, and a link to the project repository.
+babel-node를 사용해 이미지 파일을 최적화합니다.
 
-_If a `configs.name` property is included, that will be used. If not, the banner defaults to the `name` property in your `package.json` file._
+### html
+babel-node를 사용해 HTML 파일을 생성합니다.
 
-```js
-// Banner
-const banner = `/*! ${configs.name ? configs.name : pkg.name} v${pkg.version} | (c) ${new Date().getFullYear()} ${pkg.author.name} | ${pkg.license} License | ${pkg.repository.url} */`;
-```
+### html-lint
+html-validate를 사용해 dist 폴더 내의 모든 HTML 파일을 검사합니다.
 
-Sass files should be in the `src/scss` directory. Use this task to run the build.
+### build:dirty
+병렬로 js-chunk, js-page, css, img, html 스크립트를 실행합니다.
 
-```bash
-npm run css
-```
+### build
+clean 스크립트를 실행한 후, build:dirty와 html-lint를 순차적으로 실행합니다.
 
-_**Note for FireFox users:** ensure that ['Use Source Maps'](https://github.com/cferdinandi/build-tool-boilerplate/issues/7#issuecomment-811432626), and ['Show original sources'](https://github.com/cferdinandi/build-tool-boilerplate/issues/7#issuecomment-811855711) options are enabled in Developer Tools._
+### watch:css
+SCSS 파일의 변경을 감지하고 변경 시 css 스크립트를 실행합니다.
 
-### SVG Optimization
+### watch:js-chunk
+자바스크립트 청크 파일의 변경을 감지하고 변경 시 js-chunk 스크립트를 실행합니다.
 
-The boilerplate uses [svgo](https://github.com/svg/svgo) to remove the cruft that gets added to SVG files by many editors.
+### watch:js-page
+페이지별 자바스크립트 파일의 변경을 감지하고 변경 시 js-page 스크립트를 실행합니다.
 
-```json
-{
-    "devDependencies": {
-        "svgo": "^1.3.2"
-    }
-}
-```
+### watch:img
+이미지 파일의 변경을 감지하고 변경 시 img 스크립트를 실행합니다.
 
-For accessibility reasons, the boilerplate disables the settings that remove the `title` element and `viewBox` attribute.
+### watch:html
+Nunjucks 파일의 변경을 감지하고 변경 시 html 스크립트를 실행합니다.
 
-You can make additional command line configurations under the `svg` tasks in the `scripts` property of the `package.json` file.
+### watch:html-lint
+HTML 파일의 변경을 감지하고 변경 시 html-lint를 실행합니다.
 
-```bash
-svgo -f src/svg dist/svg -r --disable=removeViewBox,removeTitle
-```
+### watch
+모든 watch:* 스크립트를 병렬로 실행합니다.
 
-SVGs should be in the `src/svg` directory. Use this task to run the build.
+### server:start
+개발 서버를 시작합니다.
 
-```bash
-npm run svg
-```
+### server
+clean, build:dirty, server:start, watch 스크립트를 순차적으로 실행합니다.
 
 
-### Image Optimization
 
-The boilerplate uses [imagemin](https://www.npmjs.com/package/imagemin), with the [MozJPEG](https://github.com/imagemin/imagemin-mozjpeg), [pngcrush](https://github.com/imagemin/imagemin-pngcrush), [pngquant](https://github.com/imagemin/imagemin-pngquant), and [zopfli](https://github.com/imagemin/imagemin-zopfli) plugins.
+[//]: # (## 서브모듈 등록)
 
-(*Yea, that's kind of lot, isn't it?*)
+[//]: # ()
+[//]: # (- 현재 저장소에서, 서브모듈을 등록한다.)
 
-```json
-{
-    "devDependencies": {
-        "imagemin-cli": "^6.0.0",
-        "imagemin-mozjpeg": "^8.0.0",
-        "imagemin-pngcrush": "^6.0.0",
-        "imagemin-pngquant": "^8.0.0",
-        "imagemin-zopfli": "^6.0.0"
-    }
-}
-```
+[//]: # ()
+[//]: # (```terminal)
 
-Image files should be in the `src/img` directory. Use this task to run the build.
+[//]: # (// git submodule add <저장소URL> <저장될 폴더이름>)
 
-```bash
-npm run img
-```
+[//]: # ($> git submodule add https://github.com/richfaber/foundation-pure-html component)
 
-### Clean
-
-The boilerplate uses [recursive-fs](https://www.npmjs.com/package/recursive-fs) to provide a cross-OS recursive directory deleting solution. This package is also used for the `copy` task, so only remove it if you're deleting both tasks.
-
-```json
-{
-    "devDependencies": {
-        "recursive-fs": "^2.1.0"
-    }
-}
-```
-
-You can delete the `/dist` directory before running a build to clean up any junk that might have ended up there. The `build` task runs this task before doing anything else.
-
-```bash
-npm run clean
-```
-
-
-### Complete Build
-
-You can run all of your build tasks in a single command.
-
-Use this task to run the build.
-
-```bash
-npm run build
-```
-
-If you want to run your build _without_ first deleting the `/dist` directory, run this task instead.
-
-```bash
-npm run build-dirty
-```
-
-Regardless of which task you use, be sure to delete any tasks you're not using from the `build-dirty` task under `scripts` in your `package.json` file first. The `npm-run-all -p` command is used to run all tasks in parallel ([see below for more details](#core-dependencies)).
-
-```bash
-# default build-dirty task
-npm-run-all -p js css svg img copy
-```
-
-
-### Watch for Changes
-
-The boilerplate uses [Chokidar CLI](https://www.npmjs.com/package/chokidar-cli) to watch for changes to the `/src` directory and run tasks in response.
-
-```json
-{
-    "devDependencies": {
-        "chokidar-cli": "^2.1.0"
-    }
-}
-```
-
-Use this task to watch for changes and run a build. It will also run a fresh build when it starts.
-
-```bash
-npm run watch
-```
-
-If you only want to watch for changes to a specific directory in `/src`, you can use a task-specific watcher task.
-
-```bash
-npm run watch-js   # watch for changes to the /js directory
-npm run watch-css  # watch for changes to the /css directory
-npm run watch-svg  # watch for changes to the /svg directory
-npm run watch-img  # watch for changes to the /img directory
-npm run watch-copy # watch for changes to the /copy directory
-```
-
-
-## Server
-
-The boilerplate uses [Browsersync](https://www.browsersync.io/) to run a local server and automatically update it whenever your files change.
-
-```json
-{
-    "devDependencies": {
-        "browser-sync": "^2.26.14"
-    }
-}
-```
-
-Use this task to watch for changes. It will also run the `watch` task, and automatically rebuild whenever a file in `/src` changes.
-
-```bash
-npm run server
-```
-
-If you want to run the server _without_ the `watch` task, run this task instead.
-
-```bash
-npm run server-start
-```
-
-
-
-## Core Dependencies
-
-The boilerplate uses [npm-run-all](https://www.npmjs.com/package/npm-run-all) to run tasks consistently across different operating systems, and in parallel.
-
-```json
-{
-    "devDependencies": {
-        "npm-run-all": "^4.1.5"
-    }
-}
-```
-
-The `npm-run-all` package removes the need for Windows-specific tasks.
-
-It also allows you to run tasks in parallel. By running all of the tasks in the `build` tasks at the same time, you dramatically reduce the build time. This is also what makes it possible to run a localhost server _and_ watch for file changes in one task.
-
-**In other words, don't remove this dependency.**
+[//]: # (```)
 
