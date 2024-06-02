@@ -109,7 +109,59 @@ const createHtmlList = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>HTML Files List</title>
         <style type="text/css">
-          /* CSS 코드 생략 */
+          * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+          }
+          
+          h2.headline {
+            margin: 30px 0 10px;
+          }
+
+          img {
+            vertical-align: top;
+          }
+          
+          .tb {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          .tb tr:hover {
+            background: lightsteelblue;
+          }
+          
+          .tb td {
+            padding: 5px 10px;
+          }
+          
+          
+          .tb .pageId {
+            white-space: nowrap;
+          }
+          
+          .tb .thumnail img {
+            width: 80px;
+          }
+          
+          .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+          }
+        
+          .overlay img {
+            max-width: 95%;
+            max-height: 95%;
+          }
         </style>
     </head>
     <body>
@@ -117,7 +169,26 @@ const createHtmlList = () => {
       ${linkList}
       
       <script type="text/javascript">
-        // JavaScript 코드 생략
+        document.addEventListener('DOMContentLoaded', function () {
+          const overlay = document.createElement('div')
+          overlay.className = 'overlay'
+          
+          overlay.addEventListener('click', function () {
+            overlay.style.display = 'none'
+          })
+          
+          const img = document.createElement('img')
+          overlay.appendChild(img)
+          document.body.appendChild(overlay)
+      
+          document.querySelectorAll('.thumnail img').forEach(function (thumbnail) {
+            thumbnail.addEventListener('click', function (e) {
+              e.stopPropagation()
+              img.src = thumbnail.src
+              overlay.style.display = 'flex'
+            })
+          })
+        })
       </script>
     </body>
     </html>
