@@ -11,9 +11,10 @@
 
 - [Install Node.js.](http://nodejs.org/)
 
-## 에디터 헬퍼
+## 헬퍼
 
-- vscode njk 지원 - https://marketplace.visualstudio.com/items?itemName=douglaszaltron.nunjucks-vscode-extensionpack
+- 의존성 chrome - `node node_modules/puppeteer/install.mjs`
+- [vscode njk 지원](https://marketplace.visualstudio.com/items?itemName=douglaszaltron.nunjucks-vscode-extensionpack)
 
 ## 설치
 
