@@ -25,7 +25,8 @@
     "watch:html-lint": "chokidar ./dist/**/*.html -c \"html-validate {path}\"",
     "watch": "npm-run-all -p watch:css watch:js-chunk watch:js-page watch:img watch:html watch:html-lint",
     "server:start": "babel-node task/server",
-    "server": "npm-run-all -p clean build:dirty server:start watch"
+    "server": "npm-run-all -p clean build:dirty server:start watch",
+    "pagelist": "babel-node task/pagelist"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.5",
@@ -56,6 +57,7 @@
     "imagemin-webp": "^8.0.0",
     "imagemin-zopfli": "^6.0.0",
     "js-beautify": "^1.15.1",
+    "node-html-parser": "^6.1.13",
     "node-sass-alias-importer": "^2.0.4",
     "npm-run-all": "^4.1.5",
     "nunjucks-to-html": "^1.1.0",
