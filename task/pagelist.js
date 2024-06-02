@@ -129,7 +129,7 @@ const createHtmlList = () => {
             border-collapse: collapse;
           }
 
-          .tb tr:nth-child(2n - 1) {
+          .tb tr:hover {
             background: lightsteelblue;
           }
           
