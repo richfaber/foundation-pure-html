@@ -1,1 +1,27 @@
 @charset "UTF-8";
+
+.wrapper {
+
+  > .header {
+    background: navy;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    overflow: hidden;
+  }
+
+  > .body {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+  }
+
+  > .footer {
+    display: none;
+  }
+}
