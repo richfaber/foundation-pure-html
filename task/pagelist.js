@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const HTMLParser = require('node-html-parser');
 const { html: beautify } = require('js-beautify');
-const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer');
 
 // HTML 파일들이 위치한 루트 디렉토리
 const rootDirectory = path.resolve(__dirname, '../dist');
@@ -64,14 +64,14 @@ const processFiles = async () => {
     const root = HTMLParser.parse(content);
     const title = root.querySelector('title') ? root.querySelector('title').text : 'No Title';
     const fileName = path.basename(filePath, '.html');
-    const thumbnailPath = await generateThumbnail(filePath, fileName);
-    const relativeThumbnailPath = path.relative(rootDirectory, thumbnailPath);
+    // const thumbnailPath = await generateThumbnail(filePath, fileName);
+    // const relativeThumbnailPath = path.relative(rootDirectory, thumbnailPath);
 
     fileInfoList.push({
       fileName,
       title,
       path: file,
-      thumbnail: relativeThumbnailPath,
+      // thumbnail: relativeThumbnailPath,
     });
   }
 };
@@ -95,7 +95,7 @@ const createHtmlList = () => {
       linkList += `<tr>\n`;
       linkList += `<td width="100%" class="title"><a href="../${fileInfo.path}" target="_blank">${fileInfo.title}</a></td>\n`;
       linkList += `<td class="pageId"><a href="../${fileInfo.path}" target="_blank">${fileInfo.fileName}</a></td>\n`;
-      linkList += `<td class="thumnail"><img src="thumbnails/${path.basename(fileInfo.thumbnail)}" alt="${fileInfo.title} thumbnail" /></td>\n`;
+      // linkList += `<td class="thumnail"><img src="thumbnails/${path.basename(fileInfo.thumbnail)}" alt="${fileInfo.title} thumbnail" /></td>\n`;
       linkList += `</tr>\n`;
     });
     linkList += '</table>\n';
