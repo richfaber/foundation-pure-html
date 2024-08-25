@@ -1,10 +1,10 @@
-const sass = require('sass');
-const fs = require('fs/promises');
-const globby = require('globby');
-const postcss = require('postcss');
-const autoprefixer = require('autoprefixer');
-const postcssReporter = require('postcss-reporter');
-const { configs, plugins } = require('../configs');
+const sass = require("sass");
+const fs = require("fs/promises");
+const globby = require("globby");
+const postcss = require("postcss");
+const autoprefixer = require("autoprefixer");
+const postcssReporter = require("postcss-reporter");
+const { configs, plugins } = require("../configs");
 
 const argv = process.argv.slice(2);
 const isWatch = !!argv.length;
@@ -13,14 +13,33 @@ let files = [argv[0]];
 let event = [argv[1]]; // add, unlink
 
 function compatiblePath(str) {
-  return str.replace(/\\/g, '/');
+  return str.replace(/\\/g, "/");
 }
 
+// Custom PostCSS plugin to modify background URLs in production mode
+const modifyBackgroundUrl = postcss.plugin("modify-background-url", () => {
+  return (root) => {
+    root.walkDecls((decl) => {
+      if (decl.value && decl.value.includes("url(")) {
+        // Example: replace '/images/' with '/assets/' in production mode
+        decl.value = decl.value.replace(/url\(["']?\/resource\//g, 'url("../');
+      }
+    });
+  };
+});
+
 async function workPostCss(css, pathOut, fileName, prevMap) {
-  const result = await postcss([
+  const pluginsArray = [
     autoprefixer,
     postcssReporter({ clearReportedMessages: true }),
-  ]).process(css, {
+  ];
+
+  // Add the custom plugin in production mode
+  if (process.env.NODE_ENV === "production") {
+    pluginsArray.push(modifyBackgroundUrl);
+  }
+
+  const result = await postcss(pluginsArray).process(css, {
     from: pathOut,
     map: prevMap
       ? { prev: prevMap, inline: false, annotation: false }
@@ -44,8 +63,8 @@ async function parseSass(srcFiles) {
   const promises = srcFiles.map(async (srcFile) => {
     const outFile = compatiblePath(srcFile)
       .replace(/^src/g, configs.dest)
-      .replace(/\/scss\//g, '/css/')
-      .replace(/.scss$/g, '.css');
+      .replace(/\/scss\//g, "/css/")
+      .replace(/.scss$/g, ".css");
 
     const outFileName = outFile.match(/[^/]+$/)[0];
     const outFilePath = outFile.match(/^(.*\/)[^/]+$/)[1];
@@ -53,7 +72,6 @@ async function parseSass(srcFiles) {
     try {
       const result = await sass.renderSync({
         file: srcFile,
-        outFile: outFile,
         importer: plugins.scss.importer,
         ...configs.css,
       });
@@ -73,9 +91,9 @@ async function parseSass(srcFiles) {
 }
 
 if (isWatch) {
-  console.log('[css 감지]', files, event);
+  console.log("[css 감지]", files, event);
 
-  if (event == 'unlink') {
+  if (event == "unlink") {
     process.exit(1);
   }
 
@@ -83,7 +101,7 @@ if (isWatch) {
   if (/_[^\/]*?\.*$/.test(files[0])) {
     files = configs.css.chunk.map((file) => `${configs.root}${file}`);
     console.log(
-      '>> \'_\' 파일은 import 대상으로, 컴파일 제외, chunk 컴파일\n',
+      ">> '_' 파일은 import 대상으로, 컴파일 제외, chunk 컴파일\n",
       files
     );
   }
